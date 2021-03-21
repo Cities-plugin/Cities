@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IResidentRepository {
-    List<Resident> GetResidents();
-    Resident GetResident(UUID id);
-    boolean ResidentExists(UUID id);
-    boolean ResidentExists(String playerName);
-    boolean CreateResident(Resident resident);
-    boolean UpdateResident(Resident resident);
-    boolean RemoveResident(Resident resident);
+    List<Resident> getResidents();
+    Resident getResident(UUID id);
+    boolean residentExists(UUID id);
+    boolean createResident(Resident resident);
+    boolean updateResident(Resident resident);
+    boolean removeResident(Resident resident);
 }

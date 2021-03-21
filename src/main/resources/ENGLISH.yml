@@ -1,0 +1,41 @@
+version: 1.0
+author: partytitan
+
+# global
+cities_prefix: '&8[&3Cities&8] &r'
+
+# City creation
+city_created: '%s &afounded a new city called &f%s'
+
+# City movement
+city_enter: 'Entering: &6%s'
+city_leave: 'Entering wilderness'
+
+# City overview screen
+city_balance: '&8Bank: &6%s'
+
+# City claiming
+city_processing_claim: 'Processing claim'
+city_claimed: 'Claimed chunk [%s, %s, %s]'
+
+# City errors
+city_err_not_found: 'City not found'
+city_chunk_already_claimed: 'Chunk already claimed'
+
+# Resident overview screen
+
+resident_online: '&a(Online)'
+resident_registered_last_online: '&8Registered: &7%s &3| &8Last Online: &7%s'
+resident_balance: '&8Bank: &6%s'
+
+# Resident errors
+resident_err_no_city: 'You are not part of a city'
+resident_err_already_in_city: 'You are already part of a city'
+
+# Planet creation
+planet_created: 'Found and created a new planet called: %s'
+
+# Panet
+planet_default_unclaimed_zone_name: '&2Wilderness'
+planet_pvp: '&4[PVP]'
+planet_nopvp: '&2[PVP disabled]'

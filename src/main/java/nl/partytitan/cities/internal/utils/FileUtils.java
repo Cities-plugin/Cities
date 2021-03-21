@@ -1,16 +1,22 @@
 package nl.partytitan.cities.internal.utils;
 
+import nl.partytitan.cities.internal.config.BaseConfig;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class FileUtils {
 
     private static final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private static final Lock readLock = readWriteLock.readLock();
     private static final Lock writeLock = readWriteLock.writeLock();
+
+    private static Class<?> fileUtilsClass = FileUtils.class;
 
     /**
      * Checks a folderPath to see if it exists, if it doesn't it will attempt
@@ -122,5 +128,46 @@ public final class FileUtils {
             readLock.unlock();
         }
     }
-
+    /**
+     * Pass the resource name and it will copy the file to the desination.
+     *
+     * @param destination Destination file.
+     * @param resourceName The name of the resource to be copied
+     */
+    public static void copyResourceToFile(File destination, String resourceName){
+        InputStream istr = null;
+        OutputStream ostr = null;
+        try {
+            istr = fileUtilsClass.getResourceAsStream(resourceName);
+            if (istr == null) {
+                LoggingUtil.sendErrorMsg("Could not find template: " + resourceName);
+                return;
+            }
+            ostr = new FileOutputStream(destination);
+            final byte[] buffer = new byte[1024];
+            int length = 0;
+            length = istr.read(buffer);
+            while (length > 0) {
+                ostr.write(buffer, 0, length);
+                length = istr.read(buffer);
+            }
+        } catch (final IOException ex) {
+            LoggingUtil.sendErrorMsg("Could not write file: " + destination.toString(), ex);
+        } finally {
+            try {
+                if (istr != null) {
+                    istr.close();
+                }
+            } catch (final IOException ex) {
+                Logger.getLogger(BaseConfig.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                if (ostr != null) {
+                    ostr.close();
+                }
+            } catch (final IOException ex) {
+                LoggingUtil.sendErrorMsg("Could not close file: " + destination.toString(), ex);
+            }
+        }
+    }
 }

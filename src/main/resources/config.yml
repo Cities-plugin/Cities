@@ -1,5 +1,9 @@
 version: 1.0
 
+# Global plugin language
+# Options: ENGLISH (yes there is currently only one)
+language: ENGLISH
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                     Persistance                      | #
@@ -7,3 +11,26 @@ version: 1.0
 ############################################################
 
 storageType: FILE
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        Levels                        | #
+# +------------------------------------------------------+ #
+############################################################
+
+cityLevels:
+  - minPopulation: 0
+    titlePreFix: ''
+    titlePostFix: '(Ruins)'
+    mayorPreFix: 'Ghost'
+    mayorPostFix: ''
+  - minPopulation: 1
+    titlePreFix: ''
+    titlePostFix: '(Dwelling)'
+    mayorPreFix: ''
+    mayorPostFix: ''
+  - minPopulation: 2
+    titlePreFix: ''
+    titlePostFix: '(Hamlet)'
+    mayorPreFix: 'Leader '
+    mayorPostFix: ''

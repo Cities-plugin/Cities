@@ -11,14 +11,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public abstract class BaseRepository {
     protected final Queue<Runnable> queryQueue = new ConcurrentLinkedQueue<>();
     private final BukkitTask task;
+    private Cities plugin;
 
     @Inject
     public BaseRepository(Cities plugin) {
-        task = SchedulerUtil.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        task = SchedulerUtil.runTaskTimerAsynchronously(() -> {
             while (!this.queryQueue.isEmpty()) {
                 Runnable operation = this.queryQueue.poll();
                 operation.run();
             }
         }, 5L, 5L);
+
+        this.plugin = plugin;
+    }
+
+    public Cities getPlugin() {
+        return plugin;
     }
 }

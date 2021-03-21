@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ICityRepository {
-    List<City> GetCities();
-    City GetCity(UUID id);
-    boolean CreateCity(City city);
-    boolean UpdateCity(City city);
-    boolean RemoveCity(City city);
+    List<City> getCities();
+    City getCity(UUID id);
+    City getCity(String cityName);
+    boolean createCity(City city);
+    boolean updateCity(City city);
+    boolean removeCity(City city);
 }

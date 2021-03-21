@@ -3,7 +3,7 @@ package nl.partytitan.cities.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.google.inject.Inject;
-import nl.partytitan.cities.internal.config.interfaces.ISettings;
+import nl.partytitan.cities.internal.config.SettingsConfig;
 import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nonnull;
@@ -14,7 +14,7 @@ import javax.inject.Named;
 public class CitiesCommand extends BaseCommand {
 
     @Inject
-    private ISettings settings;
+    private SettingsConfig settings;
 
     @Inject
     @Named("PluginVersion")

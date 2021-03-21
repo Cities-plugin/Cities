@@ -1,13 +1,26 @@
 package nl.partytitan.cities;
 
+import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.google.inject.Injector;
 import nl.partytitan.cities.commands.CitiesCommand;
 import nl.partytitan.cities.commands.CityCommand;
-import org.bukkit.ChatColor;
+import nl.partytitan.cities.commands.ResidentCommand;
+import nl.partytitan.cities.internal.config.SettingsConfig;
+import nl.partytitan.cities.internal.utils.LoggingUtil;
+import nl.partytitan.cities.internal.utils.TranslationUtil;
+import nl.partytitan.cities.listeners.cities.PlayerChangeChunkListener;
+import nl.partytitan.cities.listeners.cities.PlayerChangeCityBlockListener;
+import nl.partytitan.cities.listeners.cities.PlayerEnterCityListener;
+import nl.partytitan.cities.listeners.cities.PlayerLeaveCityListener;
+import nl.partytitan.cities.listeners.player.PlayerJoinListener;
+import nl.partytitan.cities.listeners.player.PlayerMoveListener;
+import nl.partytitan.cities.listeners.world.WorldLoadListener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 
 /**
  * Cites for Bukkit
@@ -18,26 +31,66 @@ public class Cities extends JavaPlugin {
 
     private Injector injector;
     private PaperCommandManager commandManager;
+    private SettingsConfig settings;
 
     @Override
     public void onEnable() {
+
+        System.out.println("====================      Cities      ========================");
+
         // configure dependency injection
-        CitiesModule module = new CitiesModule(this, getVersion(), getDataFolder());
-        injector = module.createInjector();
-        injector.injectMembers(this);
+        configure();
 
         // enable command manager
-        commandManager = new PaperCommandManager(this);
-
         registerCommands();
 
-        getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "Cities is running");
-        getLogger().info("onEnable is called!");
+        // enable events
+        registerEvents();
+
+        LoggingUtil.sendMsg("Version: " + getVersion() + " - Plugin Enabled");
+
+        System.out.println("==============================================================");
+    }
+
+    private void configure() {
+        File datafolder = getDataFolder();
+
+        //get settings
+        settings = new SettingsConfig(datafolder);
+
+        //get language files
+        TranslationUtil.loadLanguage(datafolder, settings.getLanguage());
+
+        // configure dependency injection
+        CitiesModule module = new CitiesModule(this, getVersion(), datafolder, settings);
+        injector = module.createInjector();
+        injector.injectMembers(this);
     }
 
     private void registerCommands() {
+        commandManager = new PaperCommandManager(this);
+        commandManager.enableUnstableAPI("help");
+
         commandManager.registerCommand(injector.getInstance(CitiesCommand.class));
         commandManager.registerCommand(injector.getInstance(CityCommand.class));
+        commandManager.registerCommand(injector.getInstance(ResidentCommand.class));
+    }
+
+    private void registerEvents() {
+        final PluginManager pluginManager = getServer().getPluginManager();
+
+        // player events
+        pluginManager.registerEvents(injector.getInstance(PlayerJoinListener.class), this);
+        pluginManager.registerEvents(injector.getInstance(PlayerMoveListener.class), this);
+
+        // world events
+        pluginManager.registerEvents(injector.getInstance(WorldLoadListener.class), this);
+
+        // cities events
+        pluginManager.registerEvents(injector.getInstance(PlayerChangeChunkListener.class), this);
+        pluginManager.registerEvents(injector.getInstance(PlayerEnterCityListener.class), this);
+        pluginManager.registerEvents(injector.getInstance(PlayerLeaveCityListener.class), this);
+        pluginManager.registerEvents(injector.getInstance(PlayerChangeCityBlockListener.class), this);
     }
 
     @Override
@@ -48,6 +101,11 @@ public class Cities extends JavaPlugin {
     @Nonnull
     public Injector getInjector() {
         return injector;
+    }
+
+    @Nonnull
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public String getVersion() {
