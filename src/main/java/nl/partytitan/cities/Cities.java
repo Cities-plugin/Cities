@@ -5,8 +5,11 @@ import co.aikar.commands.PaperCommandManager;
 import com.google.inject.Injector;
 import nl.partytitan.cities.commands.CitiesCommand;
 import nl.partytitan.cities.commands.CityCommand;
+import nl.partytitan.cities.commands.ConfirmationCommand;
 import nl.partytitan.cities.commands.ResidentCommand;
 import nl.partytitan.cities.internal.config.SettingsConfig;
+import nl.partytitan.cities.internal.entities.Planet;
+import nl.partytitan.cities.internal.repositories.interfaces.IPlanetRepository;
 import nl.partytitan.cities.internal.utils.LoggingUtil;
 import nl.partytitan.cities.internal.utils.TranslationUtil;
 import nl.partytitan.cities.listeners.cities.PlayerChangeChunkListener;
@@ -16,11 +19,13 @@ import nl.partytitan.cities.listeners.cities.PlayerLeaveCityListener;
 import nl.partytitan.cities.listeners.player.PlayerJoinListener;
 import nl.partytitan.cities.listeners.player.PlayerMoveListener;
 import nl.partytitan.cities.listeners.world.WorldLoadListener;
+import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.List;
 
 /**
  * Cites for Bukkit
@@ -65,6 +70,25 @@ public class Cities extends JavaPlugin {
         CitiesModule module = new CitiesModule(this, getVersion(), datafolder, settings);
         injector = module.createInjector();
         injector.injectMembers(this);
+
+
+        // check if all worlds are loaded
+        loadUnloadedWorlds();
+    }
+
+    private void loadUnloadedWorlds(){
+        IPlanetRepository planetRepository = injector.getInstance(IPlanetRepository.class);
+        List<World> worlds = getServer().getWorlds();
+
+        if(worlds.size() > planetRepository.getPlanets().size()){
+            for (World world : worlds) {
+                if(!planetRepository.planetExists(world.getName())){
+                    String planetName = world.getName();
+                    planetRepository.createPlanet(new Planet(planetName));
+                    LoggingUtil.sendMsg(TranslationUtil.of("planet_created", planetName));
+                }
+            }
+        }
     }
 
     private void registerCommands() {
@@ -74,6 +98,7 @@ public class Cities extends JavaPlugin {
         commandManager.registerCommand(injector.getInstance(CitiesCommand.class));
         commandManager.registerCommand(injector.getInstance(CityCommand.class));
         commandManager.registerCommand(injector.getInstance(ResidentCommand.class));
+        commandManager.registerCommand(injector.getInstance(ConfirmationCommand.class));
     }
 
     private void registerEvents() {

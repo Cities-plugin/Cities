@@ -40,7 +40,7 @@ public class CityBlockClaimTask implements Runnable {
     public void run() throws ChunkAlreadyClaimedException {
 
         if(cityBlockRepository.cityBlockExists(coord)){
-            MessageUtil.sendErrorMsg(player, TranslationUtil.of("city_chunk_already_claimed"));
+            MessageUtil.sendErrorMsg(player, TranslationUtil.of("city_err_chunk_already_claimed"));
             return;
         }
 

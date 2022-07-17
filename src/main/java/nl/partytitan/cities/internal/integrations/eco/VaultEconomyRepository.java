@@ -21,7 +21,7 @@ public class VaultEconomyRepository implements IEconomyRepository {
 
     @Override
     public boolean add(UUID cityId, double amount) {
-        return this.economy.bankDeposit(cityId.toString(), amount).transactionSuccess();
+        return this.economy.depositPlayer(cityId.toString(), amount).transactionSuccess();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class VaultEconomyRepository implements IEconomyRepository {
 
     @Override
     public boolean subtract(UUID cityId, double amount) {
-        return this.economy.bankWithdraw(cityId.toString(), amount).transactionSuccess();
+        return this.economy.withdrawPlayer(cityId.toString(), amount).transactionSuccess();
     }
 
     @Override
@@ -46,22 +46,31 @@ public class VaultEconomyRepository implements IEconomyRepository {
 
     @Override
     public double getBalance(UUID cityId) {
-        return this.economy.bankBalance(cityId.toString()).balance;
+        return this.economy.getBalance(cityId.toString());
+    }
+
+    @Override
+    public boolean hasBalance(OfflinePlayer player, double amount) {
+        return this.economy.has(player, amount);
     }
 
     @Override
     public boolean hasBalance(UUID cityId, double amount) {
-        return this.economy.bankHas(cityId.toString(), amount).transactionSuccess();
+        return this.economy.has(cityId.toString(), amount);
     }
 
     @Override
     public void createBank(UUID cityId, OfflinePlayer owner) {
-        this.economy.createBank(cityId.toString(), owner);
+        this.economy.createPlayerAccount(cityId.toString());
     }
 
     @Override
     public void removeBank(UUID cityId) {
-        this.economy.deleteBank(cityId.toString());
+        if (!economy.hasAccount(cityId.toString())) {
+            return;
+        }
+
+        economy.withdrawPlayer(cityId.toString(), (economy.getBalance(cityId.toString())));
     }
 
     @Override

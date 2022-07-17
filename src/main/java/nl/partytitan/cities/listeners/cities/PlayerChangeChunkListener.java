@@ -43,7 +43,7 @@ public class PlayerChangeChunkListener implements Listener {
             // Check if from city is the same as to city
             if(currentChunkHasCity){
                 CityBlock currentCityBlock = cityBlockRepository.getCityBlock(from);
-                if(currentCityBlock.getCityId() == nextCityBlock.getCityId()) {
+                if(currentCityBlock.getCityId().equals(nextCityBlock.getCityId())) {
                     // From and to have the same city
                     // So we are moving between cityBlocks
                     PlayerChangeCityBlockEvent playerChangeCityBlockEvent = new PlayerChangeCityBlockEvent(nextCityBlock.getCity(), pme, currentCityBlock, nextCityBlock, player);

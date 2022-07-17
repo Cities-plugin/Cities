@@ -1,9 +1,8 @@
 package nl.partytitan.cities.internal.entities;
 
-import com.google.inject.Inject;
-import nl.partytitan.cities.internal.integrations.eco.interfaces.IEconomyRepository;
-import nl.partytitan.cities.internal.repositories.interfaces.ICityRepository;
-import org.bukkit.Server;
+import nl.partytitan.cities.internal.utils.server.ServerUtils;
+import nl.partytitan.cities.internal.utils.injection.IntegrationsUtil;
+import nl.partytitan.cities.internal.utils.injection.RepositoryUtil;
 
 import java.util.UUID;
 
@@ -17,15 +16,6 @@ public class Resident {
     private String surname;
 
     private UUID cityId;
-
-    @Inject
-    private transient ICityRepository cityRepository;
-
-    @Inject
-    private transient IEconomyRepository economyRepository;
-
-    @Inject
-    private transient Server server;
 
     public Resident(UUID playerId, String playerName) {
         this.uuid = playerId;
@@ -60,8 +50,12 @@ public class Resident {
         return cityId != null;
     }
 
+    public UUID getCityId() {
+        return cityId;
+    }
+
     public City getCity() {
-        return cityRepository.getCity(cityId);
+        return RepositoryUtil.getCityRepository().getCity(cityId);
     }
 
     public void setCity(UUID cityId) { this.cityId = cityId; }
@@ -98,10 +92,10 @@ public class Resident {
     }
 
     public double getBalance(){
-        return economyRepository.getBalance(server.getOfflinePlayer(uuid));
+        return IntegrationsUtil.getEconomyRepository().getBalance(ServerUtils.getOfflinePlayer(uuid));
     }
 
     public String getFormattedBalance() {
-        return economyRepository.formatBalance(getBalance());
+        return IntegrationsUtil.getEconomyRepository().formatBalance(getBalance());
     }
 }

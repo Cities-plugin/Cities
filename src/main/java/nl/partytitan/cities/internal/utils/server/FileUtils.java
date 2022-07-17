@@ -1,6 +1,7 @@
-package nl.partytitan.cities.internal.utils;
+package nl.partytitan.cities.internal.utils.server;
 
 import nl.partytitan.cities.internal.config.BaseConfig;
+import nl.partytitan.cities.internal.utils.LoggingUtil;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

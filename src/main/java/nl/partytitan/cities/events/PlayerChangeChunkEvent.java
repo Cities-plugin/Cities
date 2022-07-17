@@ -1,6 +1,6 @@
 package nl.partytitan.cities.events;
 
-import nl.partytitan.cities.internal.utils.ServerUtils;
+import nl.partytitan.cities.internal.utils.server.ServerUtils;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

@@ -19,6 +19,6 @@ public class PlayerLeaveCityListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLeaveCity(PlayerLeaveCityEvent e) {
-        MessageUtil.sendActionBarMessage(e.getPlayer(), NotificationFormatter.LeaveCityNotification(e.getFrom()));
+        MessageUtil.sendActionBarMessage(e.getPlayer(), NotificationFormatter.leaveCityNotification(e.getFrom()));
     }
 }

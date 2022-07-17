@@ -10,7 +10,7 @@ import nl.partytitan.cities.internal.entities.Resident;
 import nl.partytitan.cities.internal.repositories.BaseRepository;
 import nl.partytitan.cities.internal.repositories.interfaces.IResidentRepository;
 import nl.partytitan.cities.internal.tasks.FlatFileSaveTask;
-import nl.partytitan.cities.internal.utils.FileUtils;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 
 import java.io.File;
 import java.util.*;
@@ -27,16 +27,15 @@ public class ResidentFlatFileRepository extends BaseRepository implements IResid
     private Map<UUID, Resident> inMemoryIdMap;
 
     @Inject
-    public ResidentFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin){
+    public ResidentFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin, Gson gson){
         super(plugin);
 
         this.ResidentsFolder = new File(dataFolder, "residents");
         this.DeletedResidentsFolder = new File(dataFolder, "residents" + File.separator + "deleted");
+        this.gson = gson;
 
         FileUtils.checkOrCreateFolder(this.ResidentsFolder);
         FileUtils.checkOrCreateFolder(this.DeletedResidentsFolder);
-
-        this.gson = new Gson();
 
         inMemoryIdMap = getResidentsCache().stream().collect(Collectors.toMap(Resident::getUuid, res -> res));
 
@@ -63,18 +62,21 @@ public class ResidentFlatFileRepository extends BaseRepository implements IResid
 
     @Override
     public List<Resident> getResidents() {
-        List<Resident> residents = new ArrayList<Resident>(inMemoryIdMap.values());
-        for (Resident resident : residents) {
-            getPlugin().getInjector().injectMembers(resident);
+        return new ArrayList<Resident>(inMemoryIdMap.values());
+    }
+
+    @Override
+    public List<Resident> getResidentsByCity(City city) {
+        List<Resident> residents = new ArrayList<Resident>();
+        for (UUID uuid : city.getResidentIds()) {
+            residents.add(inMemoryIdMap.get(uuid));
         }
         return residents;
     }
 
     @Override
     public Resident getResident(UUID id) {
-        Resident resident = inMemoryIdMap.get(id);
-        getPlugin().getInjector().injectMembers(resident);
-        return resident;
+        return inMemoryIdMap.get(id);
     }
 
     @Override

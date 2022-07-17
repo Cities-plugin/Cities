@@ -1,3 +1,4 @@
+# Do not edit
 version: 1.0
 
 # Global plugin language
@@ -9,8 +10,27 @@ language: ENGLISH
 # |                     Persistance                      | #
 # +------------------------------------------------------+ #
 ############################################################
+plugin:
+  storageType: FILE
 
-storageType: FILE
+  day_timer:
+    # The number of hours in each "day".
+    # You can configure for 10 hour days. Default is 24 hours.
+    day_interval: 1d
+
+    # The time each "day", when taxes will be collected.
+    # MUST be less than day_interval. Default is 12h (midday).
+    new_day_time: 12h
+  hour_timer:
+    # The number of minutes in each "day".
+    # Default is 60m.
+    hour_interval: 60m
+    # The time each "hour", when the hourly timer ticks.
+    # MUST be less than hour_interval. Default is 30m.
+    new_hour_time: 30m
+    # The interval of each "short" timer tick
+    # Default is 20s.
+    short_interval: 20s
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -24,13 +44,64 @@ cityLevels:
     titlePostFix: '(Ruins)'
     mayorPreFix: 'Ghost'
     mayorPostFix: ''
+    cityBlockLimit: 1
   - minPopulation: 1
     titlePreFix: ''
     titlePostFix: '(Dwelling)'
     mayorPreFix: ''
     mayorPostFix: ''
+    cityBlockLimit: 16
   - minPopulation: 2
     titlePreFix: ''
     titlePostFix: '(Hamlet)'
     mayorPreFix: 'Leader '
     mayorPostFix: ''
+    cityBlockLimit: 32
+
+############################################################
+# +------------------------------------------------------+ #
+# |                    City defaults                     | #
+# +------------------------------------------------------+ #
+############################################################
+
+city:
+  price_new: 250.0
+  price_claim_cityblock: 25.0
+
+  # Distance a new claim must be from another city
+  min_plot_distance_from_another_cities_cityblock: '5'
+
+  # Distance a new city must be from another
+  min_distance_from_another_city_homeblock: '5'
+
+  # Max residents a town can have. 0 disables this feature.
+  max_residents_per_city: '0'
+
+  # The ratio to use for calculating available cityBlocks (numResidents * ratio).
+  cityBlocksToResidentRatio: 8
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |               Global plugin settings                 | #
+# +------------------------------------------------------+ #
+############################################################
+
+global_settings:
+  # Allow residents to travel to their city spawn
+  allow_city_spawn: 'true'
+  # Allow anyone to travel to public cities
+  allow_cross_city_spawn: 'true'
+  # If not zero it will take x amount of seconds before teleport goes through
+  city_spawn_warmup_time: '0'
+  # When set to true, if players are currently in a spawn warmup, moving will cancel their spawn.
+  city_spawn_warmup_movement_cancels: 'false'
+  # When set to true, if players are damaged in any way while in a spawn warmup, their spawning will be cancelled.
+  city_spawn_warmup_damage_cancels: 'false'
+  # Number of seconds that must pass before a player can use /t spawn or /res spawn.
+  city_spawn_cooldown_time: '30'
+
+  # When set for more than 0m, the amount of time until an invite is considered
+  # expired and is removed. Invites are checked for expiration once every hour.
+  # Valid values would include: 30s, 30m, 24h, 2d, etc.
+  expirationtime: 0m

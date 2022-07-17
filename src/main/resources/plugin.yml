@@ -2,5 +2,4 @@ name: Cities
 version: 1.0
 main: nl.partytitan.cities.Cities
 
-load: STARTUP
 depend: [Vault]

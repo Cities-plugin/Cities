@@ -7,11 +7,14 @@ import com.google.inject.name.Names;
 import nl.partytitan.cities.internal.config.SettingsConfig;
 import nl.partytitan.cities.db.DataModule;
 import nl.partytitan.cities.internal.integrations.IntegrationsModule;
-import nl.partytitan.cities.internal.utils.MessageUtil;
-import nl.partytitan.cities.internal.utils.SchedulerUtil;
-import nl.partytitan.cities.internal.utils.ServerUtils;
+import nl.partytitan.cities.internal.utils.*;
+import nl.partytitan.cities.internal.utils.injection.ConfigUtil;
+import nl.partytitan.cities.internal.utils.injection.IntegrationsUtil;
+import nl.partytitan.cities.internal.utils.injection.RepositoryUtil;
+import nl.partytitan.cities.internal.utils.server.SchedulerUtil;
+import nl.partytitan.cities.internal.utils.server.ServerUtils;
 import nl.partytitan.cities.services.CityService;
-import nl.partytitan.cities.services.ICityService;
+import nl.partytitan.cities.services.interfaces.ICityService;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -61,5 +64,8 @@ public class CitiesModule extends AbstractModule
         requestStaticInjection(SchedulerUtil.class);
         requestStaticInjection(ServerUtils.class);
         requestStaticInjection(MessageUtil.class);
+        requestStaticInjection(RepositoryUtil.class);
+        requestStaticInjection(IntegrationsUtil.class);
+        requestStaticInjection(ConfigUtil.class);
     }
 }

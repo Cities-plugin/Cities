@@ -14,7 +14,9 @@ public interface IEconomyRepository {
     double getBalance(OfflinePlayer player);
     double getBalance(UUID cityId);
 
+    boolean hasBalance(OfflinePlayer player, double amount);
     boolean hasBalance(UUID cityId, double amount);
+
     void createBank(UUID cityId, OfflinePlayer owner);
     void removeBank(UUID cityId);
 

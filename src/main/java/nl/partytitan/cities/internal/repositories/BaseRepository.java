@@ -2,7 +2,7 @@ package nl.partytitan.cities.internal.repositories;
 
 import com.google.inject.Inject;
 import nl.partytitan.cities.Cities;
-import nl.partytitan.cities.internal.utils.SchedulerUtil;
+import nl.partytitan.cities.internal.utils.server.SchedulerUtil;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Queue;

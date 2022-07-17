@@ -1,14 +1,19 @@
 package nl.partytitan.cities.internal.utils;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import nl.partytitan.cities.internal.entities.City;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
+@Singleton
 public class MessageUtil {
 
 
@@ -82,6 +87,22 @@ public class MessageUtil {
         for (Player player : server.getOnlinePlayers()) {
             if (player != null) {
                 player.sendMessage(TranslationUtil.of("cities_prefix") + msg);
+            }
+        }
+    }
+
+    /**
+     * Send a message to City residents.
+     * Uses default_towny_prefix
+     *
+     * @param msg message to send
+     */
+    public static void sendCityMessage(City city, String msg) {
+        LoggingUtil.sendMsg(ChatColor.stripColor("[Global Msg] " + msg));
+        for (UUID uuid : city.getResidentIds()) {
+            Player player = server.getPlayer(uuid);
+            if (player.isOnline()) {
+                player.sendMessage(TranslationUtil.of("cities_city_prefix", city.getName()) + msg);
             }
         }
     }

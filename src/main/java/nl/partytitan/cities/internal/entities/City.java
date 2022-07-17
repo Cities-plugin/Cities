@@ -1,46 +1,35 @@
 package nl.partytitan.cities.internal.entities;
 
-import com.google.inject.Inject;
-import nl.partytitan.cities.internal.config.SettingsConfig;
 import nl.partytitan.cities.internal.config.obj.Level;
-import nl.partytitan.cities.internal.integrations.eco.interfaces.IEconomyRepository;
-import javax.xml.stream.Location;
+import nl.partytitan.cities.internal.entities.base.Management;
+import nl.partytitan.cities.internal.utils.injection.ConfigUtil;
+import nl.partytitan.cities.internal.utils.injection.RepositoryUtil;
+import org.bukkit.OfflinePlayer;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-public class City {
-    private UUID id;
-    private String name;
+
+public class City extends Management {
     private UUID mayorId;
+    private long foundedDate;
+
     private String homeBlockId;
-    private Location spawn;
+
     private List<UUID> residentIds = new ArrayList<>();
     private List<String> cityBlocks = new ArrayList<>();
     // virtual
 
-    @Inject
-    private transient SettingsConfig settings;
 
-    @Inject
-    private transient IEconomyRepository economyRepository;
+    public City(UUID id, String name, OfflinePlayer owner) {
+        super(id, name, owner);
+        mayorId = owner.getUniqueId();
+        residentIds.add(owner.getUniqueId());
 
-    public City(UUID id, String name) {
-        this.id = id;
-        this.name = name;
+        foundedDate = System.currentTimeMillis();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public UUID getMayorId() {
-        return mayorId;
-    }
 
     public void addResident(UUID redidentId){
         this.residentIds.add(redidentId);
@@ -54,9 +43,35 @@ public class City {
         return this.residentIds.contains(redidentId);
     }
 
+    public int residentcount() { return this.residentIds.size(); }
+
+    public List<Resident> getResidents() { return RepositoryUtil.getResidentRepository().getResidentsByCity(this); }
+    public List<String> getResidentNames() {
+        List<Resident> residents = getResidents();
+        List<String> out = new ArrayList<>();
+        for (Resident resident : residents) {
+            out.add(resident.getFormattedName());
+        }
+        return out;
+    }
+
+    public List<UUID> getResidentIds() { return this.residentIds; }
+
     public Level getLevel(){
-        List<Level> levels = settings.getCityLevels();
-        return levels.stream().sorted(Comparator.comparingInt(Level::getMinPopulation)).filter(cl -> cl.getMinPopulation() > residentIds.size()).findFirst().orElse(null);
+        List<Level> levels = ConfigUtil.getSettings().getCityLevels();
+        return levels.stream().sorted(Comparator.comparingInt(Level::getMinPopulation)).filter(cl -> cl.getMinPopulation() >= residentcount()).findFirst().orElse(null);
+    }
+
+    public int claimCount(){
+        return cityBlocks.size();
+    }
+
+    public int maxClaims(){
+        return getLevel().getCityBlockLimit();
+    }
+
+    public int availableClaims(){
+        return maxClaims() - claimCount();
     }
 
     public String getFormattedName(){
@@ -66,16 +81,15 @@ public class City {
         return preFix + getName() + postFix;
     }
 
+    public UUID getMayorId() {
+        return mayorId;
+    }
+
     public void setMayorId(UUID mayorId) {
         this.mayorId = mayorId;
     }
-    public double getBalance(){
-        return economyRepository.getBalance(getId());
-    }
 
-    public String getFormattedBalance() {
-        return economyRepository.formatBalance(getBalance());
-    }
+    public Resident getMayor() { return RepositoryUtil.getResidentRepository().getResident(getMayorId()); }
 
     public List<String> getCityBlocks() {
         return cityBlocks;
@@ -87,5 +101,17 @@ public class City {
 
     public void removeCityBlock(CityBlock cityBlock) {
         this.cityBlocks.remove(cityBlock.getIdentifier());
+    }
+
+    public long getFoundedDate() {
+        return foundedDate;
+    }
+
+    public String getHomeBlockId() {
+        return homeBlockId;
+    }
+
+    public void setHomeBlockId(String homeBlockId) {
+        this.homeBlockId = homeBlockId;
     }
 }

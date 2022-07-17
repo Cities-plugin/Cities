@@ -9,7 +9,7 @@ import nl.partytitan.cities.internal.entities.CityBlock;
 import nl.partytitan.cities.internal.repositories.BaseRepository;
 import nl.partytitan.cities.internal.repositories.interfaces.ICityBlockRepository;
 import nl.partytitan.cities.internal.tasks.FlatFileSaveTask;
-import nl.partytitan.cities.internal.utils.FileUtils;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 import nl.partytitan.cities.internal.valueobjects.Coord;
 
 import java.io.File;
@@ -29,15 +29,15 @@ public class CityBlockFlatFileRepository extends BaseRepository implements ICity
     private Map<Coord, CityBlock> inMemoryCoordMap;
 
     @Inject
-    public CityBlockFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin){
+    public CityBlockFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin, Gson gson){
         super(plugin);
 
         this.planetsFolder = new File(dataFolder, "planets");
         this.deletedPlanetsFolder = new File(dataFolder, "planets" + File.separator + "deleted");
+        this.gson = gson;
 
         FileUtils.checkOrCreateFolder(this.planetsFolder);
         FileUtils.checkOrCreateFolder(this.deletedPlanetsFolder);
-        this.gson = new Gson();
 
         List<CityBlock> cachedCities = getCityBlocksCache();
         inMemoryCoordMap = cachedCities.stream().collect(Collectors.toMap(CityBlock::getCoord, cityBlock -> cityBlock));
@@ -60,7 +60,6 @@ public class CityBlockFlatFileRepository extends BaseRepository implements ICity
             for (File cityBlockFile : cityBlockFiles) {
                 if(cityBlockFile.isFile()){
                     CityBlock cityBlock = gson.fromJson(FileUtils.convertFileToString(cityBlockFile), CityBlock.class);
-                    getPlugin().getInjector().injectMembers(cityBlock);
                     cityBlocks.add(cityBlock);
                 }
             }
@@ -70,18 +69,12 @@ public class CityBlockFlatFileRepository extends BaseRepository implements ICity
 
     @Override
     public List<CityBlock> getCityBlocks() {
-        List<CityBlock> cityBlocks = new ArrayList<CityBlock>(inMemoryCoordMap.values());
-        for (CityBlock cityBlock : cityBlocks) {
-            getPlugin().getInjector().injectMembers(cityBlock);
-        }
-        return cityBlocks;
+        return new ArrayList<CityBlock>(inMemoryCoordMap.values());
     }
 
     @Override
     public CityBlock getCityBlock(Coord coord) {
-        CityBlock cityBlock = inMemoryCoordMap.get(coord);
-        getPlugin().getInjector().injectMembers(cityBlock);
-        return cityBlock;
+        return inMemoryCoordMap.get(coord);
     }
 
     @Override

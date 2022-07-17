@@ -2,7 +2,7 @@ package nl.partytitan.cities.events;
 
 import nl.partytitan.cities.internal.entities.City;
 import nl.partytitan.cities.internal.entities.CityBlock;
-import nl.partytitan.cities.internal.utils.ServerUtils;
+import nl.partytitan.cities.internal.utils.server.ServerUtils;
 import nl.partytitan.cities.internal.valueobjects.Coord;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

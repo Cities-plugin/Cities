@@ -1,7 +1,6 @@
 package nl.partytitan.cities.internal.tasks;
 
-import nl.partytitan.cities.Cities;
-import nl.partytitan.cities.internal.utils.FileUtils;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 import nl.partytitan.cities.internal.utils.LoggingUtil;
 
 import java.io.File;

@@ -7,6 +7,7 @@ import nl.partytitan.cities.events.PlayerLeaveCityEvent;
 import nl.partytitan.cities.internal.repositories.interfaces.IResidentRepository;
 import nl.partytitan.cities.internal.utils.MessageUtil;
 import nl.partytitan.cities.internal.utils.TranslationUtil;
+import nl.partytitan.cities.messageformats.NotificationFormatter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,6 +19,6 @@ public class PlayerChangeCityBlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChangeCityBlock(PlayerChangeCityBlockEvent e) {
-        MessageUtil.sendMsg(e.getPlayer(), e.getTo().getIdentifier());
+        MessageUtil.sendActionBarMessage(e.getPlayer(), NotificationFormatter.interCityNotifications(e.getFrom(), e.getTo()));
     }
 }

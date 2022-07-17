@@ -2,20 +2,17 @@ package nl.partytitan.cities.db.flatfile;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import nl.partytitan.cities.Cities;
 import nl.partytitan.cities.internal.entities.City;
-import nl.partytitan.cities.internal.entities.Resident;
 import nl.partytitan.cities.internal.repositories.BaseRepository;
 import nl.partytitan.cities.internal.repositories.interfaces.ICityRepository;
 import nl.partytitan.cities.internal.tasks.FlatFileSaveTask;
-import nl.partytitan.cities.internal.utils.FileUtils;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -30,15 +27,15 @@ public class CityFlatFileRepository extends BaseRepository implements ICityRepos
     private Map<String, City> inMemoryNameMap;
 
     @Inject
-    public CityFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin){
+    public CityFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin, Gson gson){
         super(plugin);
 
         this.CitiesFolder = new File(dataFolder, "cities");
         this.DeletedCitiesFolder = new File(dataFolder, "cities" + File.separator + "deleted");
+        this.gson = gson;
 
         FileUtils.checkOrCreateFolder(this.CitiesFolder);
         FileUtils.checkOrCreateFolder(this.DeletedCitiesFolder);
-        this.gson = new Gson();
 
         // flatfile makes filtering by property impossible so we use a cache
         List<City> cachedCities = getCitiesCache();
@@ -62,18 +59,12 @@ public class CityFlatFileRepository extends BaseRepository implements ICityRepos
 
     @Override
     public List<City> getCities() {
-        List<City> cities = new ArrayList<City>(inMemoryIdMap.values());
-        for (City city : cities) {
-            getPlugin().getInjector().injectMembers(city);
-        }
-        return cities;
+        return new ArrayList<City>(inMemoryIdMap.values());
     }
 
     @Override
     public City getCity(UUID id) {
-        City city = inMemoryIdMap.get(id);
-        getPlugin().getInjector().injectMembers(city);
-        return city;
+        return inMemoryIdMap.get(id);
     }
 
     @Override

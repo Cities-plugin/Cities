@@ -1,14 +1,12 @@
 package nl.partytitan.cities.internal.config;
 
-import nl.partytitan.cities.internal.utils.FileUtils;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 import nl.partytitan.cities.internal.utils.LoggingUtil;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Superclass for config classes

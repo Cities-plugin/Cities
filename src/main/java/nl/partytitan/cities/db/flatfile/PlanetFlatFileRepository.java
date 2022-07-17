@@ -5,14 +5,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import nl.partytitan.cities.Cities;
-import nl.partytitan.cities.internal.entities.City;
-import nl.partytitan.cities.internal.entities.CityBlock;
 import nl.partytitan.cities.internal.entities.Planet;
 import nl.partytitan.cities.internal.repositories.BaseRepository;
 import nl.partytitan.cities.internal.repositories.interfaces.IPlanetRepository;
 import nl.partytitan.cities.internal.tasks.FlatFileSaveTask;
-import nl.partytitan.cities.internal.utils.FileUtils;
-import nl.partytitan.cities.internal.valueobjects.Coord;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,15 +27,15 @@ public class PlanetFlatFileRepository extends BaseRepository implements IPlanetR
     private Map<String, Planet> inMemoryNameMap;
 
     @Inject
-    public PlanetFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin){
+    public PlanetFlatFileRepository(@Named("ConfigFolder") File dataFolder, Cities plugin, Gson gson){
         super(plugin);
 
         this.planetsFolder = new File(dataFolder, "planets");
         this.deletedPlanetsFolder = new File(dataFolder, "planets" + File.separator + "deleted");
+        this.gson = gson;
 
         FileUtils.checkOrCreateFolder(this.planetsFolder);
         FileUtils.checkOrCreateFolder(this.deletedPlanetsFolder);
-        this.gson = new Gson();
 
         // flatfile makes filtering by property impossible so we use a cache
         List<Planet> cachedPlanets = getPlanetsCache();
@@ -53,7 +50,6 @@ public class PlanetFlatFileRepository extends BaseRepository implements IPlanetR
         for (File file : planetFiles) {
             if(file.isFile()){
                 Planet planet = gson.fromJson(FileUtils.convertFileToString(file), Planet.class);
-                getPlugin().getInjector().injectMembers(planet);
                 planets.add(planet);
             }
         }
@@ -62,18 +58,12 @@ public class PlanetFlatFileRepository extends BaseRepository implements IPlanetR
 
     @Override
     public List<Planet> getPlanets() {
-        List<Planet> planets = new ArrayList<Planet>(inMemoryNameMap.values());
-        for (Planet planet : planets) {
-            getPlugin().getInjector().injectMembers(planet);
-        }
-        return planets;
+        return new ArrayList<Planet>(inMemoryNameMap.values());
     }
 
     @Override
     public Planet getPlanet(String planetname) {
-        Planet planet = inMemoryNameMap.get(planetname);
-        getPlugin().getInjector().injectMembers(planet);
-        return planet;
+        return inMemoryNameMap.get(planetname);
     }
 
     @Override

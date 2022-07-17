@@ -1,5 +1,6 @@
 package nl.partytitan.cities.internal.valueobjects;
 
+import nl.partytitan.cities.internal.entities.Planet;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 
@@ -41,6 +42,8 @@ public class Coord {
 
         return worldName;
     }
+
+    public String getIdentifier() { return worldName + "_" + x + "_" + z; }
     @Override
     public int hashCode() {
 

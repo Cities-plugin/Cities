@@ -6,7 +6,7 @@ import nl.partytitan.cities.Cities;
 import nl.partytitan.cities.internal.repositories.interfaces.IResidentRepository;
 import nl.partytitan.cities.internal.tasks.player.OnPlayerLoginTask;
 import nl.partytitan.cities.internal.utils.LoggingUtil;
-import nl.partytitan.cities.internal.utils.SchedulerUtil;
+import nl.partytitan.cities.internal.utils.server.SchedulerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -1,10 +1,8 @@
 package nl.partytitan.cities.internal.utils;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import nl.partytitan.cities.internal.config.enums.Languages;
+import nl.partytitan.cities.internal.utils.server.FileUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 

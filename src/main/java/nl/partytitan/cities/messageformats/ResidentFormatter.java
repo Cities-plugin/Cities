@@ -1,7 +1,7 @@
 package nl.partytitan.cities.messageformats;
 
 import nl.partytitan.cities.internal.entities.Resident;
-import nl.partytitan.cities.internal.utils.ServerUtils;
+import nl.partytitan.cities.internal.utils.server.ServerUtils;
 import nl.partytitan.cities.internal.utils.TranslationUtil;
 import org.bukkit.entity.Player;
 

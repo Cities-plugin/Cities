@@ -11,6 +11,7 @@ public class Level {
     private String titlePostFix;
     private String mayorPreFix;
     private String mayorPostFix;
+    private int cityBlockLimit;
 
     public int getMinPopulation() {
         return minPopulation;
@@ -48,7 +49,11 @@ public class Level {
         return mayorPostFix != null && !mayorPostFix.isEmpty();
     }
 
-    public static Level newLevel(int minPopulation, String titlePreFix, String titlePostFix, String mayorPreFix, String mayorPostFix) {
+    public int getCityBlockLimit() {
+        return cityBlockLimit;
+    }
+
+    public static Level newLevel(int minPopulation, String titlePreFix, String titlePostFix, String mayorPreFix, String mayorPostFix, int cityBlockLimit) {
         Level newLevel = new Level();
 
         newLevel.minPopulation = minPopulation;
@@ -56,7 +61,9 @@ public class Level {
         newLevel.titlePostFix = titlePostFix;
         newLevel.mayorPreFix = mayorPreFix;
         newLevel.mayorPostFix = mayorPostFix;
+        newLevel.cityBlockLimit = cityBlockLimit;
 
         return newLevel;
     }
+
 }
