@@ -1,4 +1,4 @@
-package nl.partytitan.dependencyinjection;
+package nl.partytitan.cities.dependencyinjection;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -6,16 +6,18 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import nl.partytitan.dependencyinjection.annotations.PostConstruct;
+import nl.partytitan.cities.dependencyinjection.annotations.PostConstruct;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class BinderModule extends AbstractModule implements TypeListener {
-    private JavaPlugin javaPlugin;
+    private final JavaPlugin javaPlugin;
 
     public BinderModule(final @NotNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
@@ -24,6 +26,10 @@ public class BinderModule extends AbstractModule implements TypeListener {
     @Override
     protected void configure() {
         super.bindListener(Matchers.any(), this);
+        super.bindListener(Matchers.any(), this);
+
+        super.bind(JavaPlugin.class).toInstance(javaPlugin);
+        super.bind(PluginManager.class).toInstance(javaPlugin.getServer().getPluginManager());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package nl.partytitan.utils;
+package nl.partytitan.cities.utils;
 
 public class Constants {
     private Constants() {}
