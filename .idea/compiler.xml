@@ -9,5 +9,8 @@
         <module name="Cities" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Cities" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
