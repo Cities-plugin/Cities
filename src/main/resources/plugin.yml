@@ -2,3 +2,5 @@ name: Cities
 version: '${project.version}'
 main: nl.partytitan.cities.Cities
 api-version: 1.19
+
+depend: [Vault]

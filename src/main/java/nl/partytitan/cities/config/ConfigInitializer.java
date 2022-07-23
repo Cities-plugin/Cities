@@ -2,13 +2,11 @@ package nl.partytitan.cities.config;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import nl.partytitan.cities.dependencyinjection.interfaces.Initializer;
+import nl.partytitan.cities.dependencyinjection.interfaces.IInitializer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.logging.Logger;
-
-public class ConfigInitializer implements Initializer {
+public class ConfigInitializer implements IInitializer {
     @Inject
     private JavaPlugin plugin;
 
